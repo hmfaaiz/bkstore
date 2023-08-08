@@ -1,5 +1,5 @@
 const { AddBook, GetBook, GetBookByIsbn, GetBookByAuthor, GetBookByTitle, GetBookByReview,
-    AddBookReview, ModifyReview, DeleteReview } = require("./middleware")
+    AddBookReview, ModifyReview, DeleteReview,Search } = require("./middleware")
 const route = require("express").Router()
 
 route.post("/", (req, res) => {
@@ -9,6 +9,12 @@ route.post("/", (req, res) => {
 
 route.get("/", (req, res) => {
     GetBook(req, res)
+
+})
+
+route.get("/search/:key", (req, res) => {
+    console.log(typeof(req.params.key))
+    Search(req, res)
 
 })
 

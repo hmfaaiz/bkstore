@@ -14,7 +14,7 @@ const RegisterUser = async (req, res) => {
         const findUser = await User.findOne({ "username": req.body.username })
         if (!findUser) {
             const saveUser = await newUser.save()
-            return res.status(200).json(saveUser)
+            return res.status(200).json("Successfully Registered!")
 
         }
         else {
@@ -59,15 +59,46 @@ const LoginUser = async (req, res) => {
 
 const GetBook = async (req, res) => {
 
-    // Authentication(req, res, async () => {
-    const findBook = await Book.find()
-    return res.status(200).json(findBook)
-    // })
+    Authentication(req, res, async () => {
+        const findBook = await Book.find()
+        return res.status(200).json(findBook)
+    })
 }
+
+const Search = async (req, res) => {
+    Authentication(req, res, async () => {
+    const searchKey = req.params.key;
+
+    try {
+        const findBook = await Book.find(
+            {
+                '$or': [
+                    { author: { $regex: searchKey, $options: 'i' } },
+                    { title: { $regex: searchKey, $options: 'i' } },
+                    { isbn: { $regex: searchKey } }
+                ]
+            }
+        )
+        if (findBook.length>0) {
+            return res.status(200).json(findBook)
+        }
+        else {
+            return res.status(200).json("Not found")
+
+        }
+
+    }
+    catch (err) {
+        return res.status(404).json(err)
+    }
+
+
+    })
+
+}
+
 const GetBookByIsbn = async (req, res) => {
     Authentication(req, res, async (user) => {
-        console.log("yes")
-        console.log("user", user)
         const isbn = req.params.isbn
         const findBook = await Book.findOne({ "isbn": isbn })
         return res.status(200).json(findBook)
@@ -90,7 +121,6 @@ const GetBookByTitle = async (req, res) => {
     Authentication(req, res, async () => {
         const title = req.params.title
         const findBook = await Book.find({ "title": title })
-
         return res.status(200).json(findBook)
     })
 }
@@ -146,7 +176,9 @@ const ModifyReview = (req, res) => {
 }
 const DeleteReview = (req, res) => {
 
+
     Authentication(req, res, async (user) => {
+
         const selectBook = await Book.findOne({ "isbn": req.params.isbn })
 
 
@@ -186,11 +218,9 @@ const DeleteReview = (req, res) => {
 const AddBookReview = async (req, res) => {
 
     Authentication(req, res, async (user) => {
+
         const selectBook = await Book.findOne({ "isbn": req.params.isbn })
-
         const review = req.body.reviews
-
-
         selectBook.reviews.push({
             id: uuidv4(), username: user.user.username,
             review: review
@@ -223,5 +253,5 @@ const AddBook = async (req, res) => {
 
 module.exports = {
     AddBook, GetBook, GetBookByIsbn, GetBookByAuthor, GetBookByTitle, GetBookByReview,
-    RegisterUser, LoginUser, AddBookReview, ModifyReview, DeleteReview
+    RegisterUser, LoginUser, AddBookReview, ModifyReview, DeleteReview, Search
 }
