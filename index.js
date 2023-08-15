@@ -20,7 +20,7 @@ app.use(cors());
 app.use(express.json())
 app.use('/api/book', bookRoute)
 app.use('/api/user', userRoute)
-
+app.use('/uploads',express.static('uploads'))
 app.listen(2000, () => {
     console.log("Listen")
 })

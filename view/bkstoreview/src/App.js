@@ -5,6 +5,8 @@ import { Component } from "react";
 import Login from "./Pages/Login"
 import Register from "./Pages/Register"
 import Home from "./Pages/Home"
+import Addbook from "./Pages/Addbook"
+import InventoryPage from "./Pages/Inventory"
 // import Auth from "./Pages/Auth"
 
 
@@ -22,6 +24,8 @@ function App() {
           <Route path="/" element={< Login />} />
           {/* <Route path="/home" element={<Auth Component={Home} />} /> */}
           <Route path="/home" element={<Home/>} />
+          <Route path="/addbook" element={<Addbook/>} />
+          <Route path="/inventory" element={<InventoryPage/>} />
 
         </Routes>
 

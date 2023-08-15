@@ -3,6 +3,18 @@ const User = require('../model/user.js')
 const { v4: uuidv4 } = require("uuid");
 const { GenerateToken, Authentication } = require('./authentication')
 
+
+const GetImage = async (req, res) => {
+    try {   
+        const file = await Book.findById(req.params.fileId);
+        console.log(file)
+        res.download(file.pdf);
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ msg: error.message });
+    }
+}
+
 const RegisterUser = async (req, res) => {
     const newUser = new User({
         username: req.body.username,
@@ -234,11 +246,15 @@ const AddBookReview = async (req, res) => {
 
 
 const AddBook = async (req, res) => {
+    console.log(273,req)
 
     const book = new Book({
         isbn: req.body.isbn,
         author: req.body.author,
-        title: req.body.title
+        title: req.body.title,
+        image:req.files["image"][0].path,
+        pdf:req.files["pdf"][0].path,
+        pdf_name:req.files["pdf"][0].name
     });
 
     try {
@@ -253,5 +269,5 @@ const AddBook = async (req, res) => {
 
 module.exports = {
     AddBook, GetBook, GetBookByIsbn, GetBookByAuthor, GetBookByTitle, GetBookByReview,
-    RegisterUser, LoginUser, AddBookReview, ModifyReview, DeleteReview, Search
+    RegisterUser, LoginUser, AddBookReview, ModifyReview, DeleteReview, Search,GetImage
 }

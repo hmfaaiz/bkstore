@@ -17,6 +17,7 @@ const GenerateToken = (user, res) => {
 const Authentication = (req, res, next) => {
     // const token = req.headers.token
     token = req.headers.authorization;
+
     if (token) {
        
         jwt.verify(token, process.env.Key, (err, user) => {

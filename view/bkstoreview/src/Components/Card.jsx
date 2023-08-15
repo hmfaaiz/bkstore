@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import Cookies from "universal-cookie";
+import FileDownload from "js-file-download";
 
 const Container = styled.div`
   display: flex;
@@ -173,6 +174,7 @@ const DeleteButton = styled.button`
 
 
 const Cart = (props) => {
+  console.log(props.data._id)
   const reviews = props.data.reviews
   const [myreview, setMyreview] = useState("...")
 
@@ -214,42 +216,60 @@ const Cart = (props) => {
   };
 
 
-  const EditReview=(i)=>{
-    console.log(props.data.reviews[i],myreview)
+  const EditReview = (i) => {
+    console.log(props.data.reviews[i], myreview)
     const obj = {
       reviews: myreview
     }
-    let url=`http://localhost:2000/api/book/updatereview/${props.data.isbn}/${props.data.reviews[i].id}`
+    let url = `http://localhost:2000/api/book/updatereview/${props.data.isbn}/${props.data.reviews[i].id}`
 
-    axios(url,{
-      method:'PUT',
-      data:JSON.stringify(obj),
+    axios(url, {
+      method: 'PUT',
+      data: JSON.stringify(obj),
       headers: {
         "Content-Type": "application/json",
         "Authorization": cookies.get("token"),
       },
     })
-    .then((res)=>alert("Successfully Edited"))
-    .catch((err)=>alert(err))
+      .then((res) => alert("Successfully Edited"))
+      .catch((err) => alert(err))
 
   }
-  const DeleteReview=(i)=>{
-    console.log(props.data.reviews[i],myreview)
-   
-    let url=`http://localhost:2000/api/book/deletereview/${props.data.isbn}/${props.data.reviews[i].id}`
+  const DeleteReview = (i) => {
+    console.log(props.data.reviews[i], myreview)
 
-    axios(url,{
-      method:'DELETE',
+    let url = `http://localhost:2000/api/book/deletereview/${props.data.isbn}/${props.data.reviews[i].id}`
+
+    axios(url, {
+      method: 'DELETE',
       headers: {
         "Content-Type": "application/json",
         "Authorization": cookies.get("token"),
       },
     })
-    .then((res)=>alert("Successfully Deleted"))
-    .catch((err)=>alert(err))
+      .then((res) => alert("Successfully Deleted"))
+      .catch((err) => alert(err))
 
   }
 
+  const Download = (e) => {
+    console.log("Call",props.data._id)
+    e.preventDefault();
+    // window.open(`http://localhost:2000/${props.data.pdf}`, "_blank");
+    axios(`http://localhost:2000/api/book/pdf/${props.data._id}`,{
+      method:"GET"
+    })
+    .then((res)=>{
+      console.log("res",res)
+    // FileDownload(`http://localhost:2000/${props.data.pdf}`, "abc.pdf")
+
+    })
+    .catch((err)=>{
+      console.log(err)
+
+    })
+
+  }
   //{showFullComment ? item.review : `${item.review.slice(0, 50)}...`}
 
 
@@ -257,13 +277,15 @@ const Cart = (props) => {
     <>
       <Container>
         <BookDetailsContainer>
-          <BookImage src="https://m.media-amazon.com/images/I/4112f+p3VKL._SY344_BO1,204,203,200_.jpg" alt="Book Cover" />
+          <BookImage src={`http://localhost:2000/${props.data.image}`} alt="Book Cover" />
           <div>
             <BookTitle>{props.data.title}</BookTitle>
             <BookAuthor>Author : {props.data.author}</BookAuthor>
             <BookDescription>
               Lorem ipsum dolor sit amet, Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque eligendi quia, officiis placeat, dolore, similique libero voluptates
               psa iste provident! consectetur adipiscing elit. Sed condimentum justo vel purus consequat.
+              {/* <a href={`http://localhost:2000/${props.data.pdf}`} target="_blank">Open PDF</a> */}
+              <button onClick={Download}>Open pdf</button>
             </BookDescription>
           </div>
         </BookDetailsContainer>
@@ -293,13 +315,13 @@ const Cart = (props) => {
                         {item.username == "faaiz" ?
                           (
                             <ModifyCont>
-                              <EditButton onClick={()=>EditReview(i)}>Edit</EditButton>
-                              <DeleteButton onClick={()=>DeleteReview(i)}>Delete</DeleteButton>
+                              <EditButton onClick={() => EditReview(i)}>Edit</EditButton>
+                              <DeleteButton onClick={() => DeleteReview(i)}>Delete</DeleteButton>
 
-                            </ModifyCont> 
-                            ):(
-                              <p></p>
-                            )
+                            </ModifyCont>
+                          ) : (
+                            <p></p>
+                          )
 
                         }
 
