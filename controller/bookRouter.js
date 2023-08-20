@@ -7,6 +7,7 @@ const upload = multer({ dest: 'uploads/' })
 const route = require("express").Router()
 
 route.post("/", upload.fields([{ name: "image", maxCount: 1 }, { name: "pdf", maxCount: 1 }]), (req, res) => {
+    console.log("Click")
     AddBook(req, res)
 
 })

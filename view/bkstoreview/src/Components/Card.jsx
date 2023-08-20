@@ -3,6 +3,11 @@ import styled from 'styled-components';
 import axios from 'axios';
 import Cookies from "universal-cookie";
 import FileDownload from "js-file-download";
+import TextField from '@mui/material/TextField';
+import { Dialog, Box, styled as mtstyled } from "@mui/material"
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import Button from '@mui/material/Button';
 
 const Container = styled.div`
   display: flex;
@@ -76,6 +81,9 @@ const UserImage = styled.img`
 
 const CommentContent = styled.div`
   flex: 1;
+  max-width: 90%; 
+  word-wrap: break-word;
+  
 `;
 
 const CommentUserName = styled.p`
@@ -95,7 +103,7 @@ const CommentText = styled.div`
   margin: 5px 0;
   font-size: 14px;
   color: #555;
-  overflow: hidden;
+
 `;
 
 const CommentTextArea = styled.input`
@@ -123,6 +131,7 @@ const InputContainer = styled.div`
   border-radius: 8px;
   padding: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top:5px;
 `;
 
 const TextInput = styled.input`
@@ -132,6 +141,7 @@ const TextInput = styled.input`
   font-size: 14px;
   border-radius: 8px;
   outline: none;
+
 `;
 
 const SendButton = styled.button`
@@ -172,24 +182,40 @@ const DeleteButton = styled.button`
   margin-left:5px;
 `;
 
+const DialogueStyle = {
+  height: '980%',
+  width: '76%',
+  maxWidth: '90%',
+  maxHeight: '100%',
+  marginTop: '17%',
+  boxShadow: 'none',
+  overflow: 'hidden',
+
+
+
+
+}
 
 const Cart = (props) => {
   console.log(props.data._id)
   const reviews = props.data.reviews
-  const [myreview, setMyreview] = useState("...")
+  const [myreview, setMyreview] = useState("")
 
   const cookies = new Cookies();
-  const [showFullComment, setShowFullComment] = useState(false);
+  const [showEditarea, setShowEditarea] = useState("");
+  const [open, setOpen] = useState(true);
+  const [pointerSee, setPointerSee] = useState();
 
-  const commentText = "Lorem ipsum dolor sit amet, Laaaaaassls dddddddddddd ggg hh jdddddddddddda ddddddd dd ddd d  oconsectetur adipiscing elit. Sed condimentum justo vel purus consequat.";
 
-  const toggleComment = () => {
-    setShowFullComment(!showFullComment);
+
+  const toggleComment = (i) => {
+    setPointerSee(i)
   };
 
 
 
   const AddReview = () => {
+    console.log("myreview")
     const obj = {
       reviews: myreview
     }
@@ -205,7 +231,7 @@ const Cart = (props) => {
     })
 
       .then((res) => {
-        alert("Successfully added")
+
 
       })
 
@@ -213,11 +239,15 @@ const Cart = (props) => {
         alert(err)
       })
 
+
+
+
   };
 
 
   const EditReview = (i) => {
-    console.log(props.data.reviews[i], myreview)
+
+    setOpen(false)
     const obj = {
       reviews: myreview
     }
@@ -231,7 +261,7 @@ const Cart = (props) => {
         "Authorization": cookies.get("token"),
       },
     })
-      .then((res) => alert("Successfully Edited"))
+
       .catch((err) => alert(err))
 
   }
@@ -247,30 +277,30 @@ const Cart = (props) => {
         "Authorization": cookies.get("token"),
       },
     })
-      .then((res) => alert("Successfully Deleted"))
+
       .catch((err) => alert(err))
 
   }
 
-  const Download = (e) => {
-    console.log("Call",props.data._id)
-    e.preventDefault();
-    // window.open(`http://localhost:2000/${props.data.pdf}`, "_blank");
-    axios(`http://localhost:2000/api/book/pdf/${props.data._id}`,{
-      method:"GET"
-    })
-    .then((res)=>{
-      console.log("res",res)
-    // FileDownload(`http://localhost:2000/${props.data.pdf}`, "abc.pdf")
 
-    })
-    .catch((err)=>{
-      console.log(err)
-
-    })
+  const EditButn = (i) => {
+    setOpen(true)
+    setMyreview(props.data.reviews[i].review)
+    setShowEditarea(props.data.reviews[i].id)
 
   }
-  //{showFullComment ? item.review : `${item.review.slice(0, 50)}...`}
+
+  const CloseEdit = () => {
+    setOpen(false)
+
+  }
+
+
+  const Download = (e) => {
+    console.log("Call", props.data._id)
+    e.preventDefault();
+    window.open(`http://localhost:2000/api/book/pdf/${props.data._id}`, "_blank");
+  }
 
 
   return (
@@ -284,7 +314,7 @@ const Cart = (props) => {
             <BookDescription>
               Lorem ipsum dolor sit amet, Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque eligendi quia, officiis placeat, dolore, similique libero voluptates
               psa iste provident! consectetur adipiscing elit. Sed condimentum justo vel purus consequat.
-              {/* <a href={`http://localhost:2000/${props.data.pdf}`} target="_blank">Open PDF</a> */}
+
               <button onClick={Download}>Open pdf</button>
             </BookDescription>
           </div>
@@ -305,18 +335,50 @@ const Cart = (props) => {
                       <CommentTime>2 hours ago</CommentTime>
                       <CommentText>
 
-                        {showFullComment ? item.review : `${item.review.slice(0, 50)}...`}
-                        {!showFullComment && (
-                          <SeeMoreButton onClick={toggleComment}>See More</SeeMoreButton>
-                        )}
-                        {showFullComment && (
-                          <SeeMoreButton onClick={toggleComment}>. Less</SeeMoreButton>
-                        )}
+                        {pointerSee == i ? item.review : `${item.review.slice(0, 50)}...`}
+                        {pointerSee == i?(
+                          <SeeMoreButton onClick={() => toggleComment()}>&nbsp; Less</SeeMoreButton>
+                        ):
+                        (
+
+                        <SeeMoreButton onClick={() => toggleComment(i)}>See more</SeeMoreButton>
+
+                        )
+                      }
+
                         {item.username == "faaiz" ?
                           (
                             <ModifyCont>
-                              <EditButton onClick={() => EditReview(i)}>Edit</EditButton>
+                              <EditButton onClick={() => EditButn(i)}>Edit</EditButton>
                               <DeleteButton onClick={() => DeleteReview(i)}>Delete</DeleteButton>
+
+                              {showEditarea == props.data.reviews[i].id ?
+                                (
+                                  <Box>
+                                    <Dialog open={open} PaperProps={{ DialogueStyle }} >
+                                      <DialogContent>
+                                        <TextField onChange={(e) => setMyreview(e.target.value)} value={myreview} variant="standard" />
+                                      </DialogContent>
+
+                                      <DialogActions>
+
+                                        {myreview != "" ? (
+                                          <Button onClick={() => EditReview(i)}>Send</Button>
+
+                                        ) : (
+                                          <p></p>
+
+                                        )
+                                        }
+                                        <Button onClick={CloseEdit}>Cancel</Button>
+                                      </DialogActions>
+                                    </Dialog>
+                                  </Box>
+
+
+                                ) : (<p></p>)
+                              }
+
 
                             </ModifyCont>
                           ) : (
@@ -344,7 +406,15 @@ const Cart = (props) => {
         }
         <InputContainer>
           <TextInput onChange={(e) => setMyreview(e.target.value)} placeholder="Add your comment here..." />
-          <SendButton onClick={AddReview}>&gt; </SendButton>
+          {myreview != "" ? (
+            <SendButton onClick={AddReview}>&gt; </SendButton>
+
+          ) : (
+            <p></p>
+
+          )
+          }
+
         </InputContainer>
       </Container>
 

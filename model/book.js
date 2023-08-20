@@ -7,7 +7,7 @@ const BookSchema = new mongoose.Schema({
     title: { type: String, required: true },
     image:{type:String},
     pdf:{type:String},
-    pdf_name:{type:String},
+    pdfname:{type:String},
     reviews: { type: [] }
 
 })

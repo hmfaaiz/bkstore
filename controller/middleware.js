@@ -8,10 +8,10 @@ const GetImage = async (req, res) => {
     try {   
         const file = await Book.findById(req.params.fileId);
         console.log(file)
-        res.download(file.pdf);
+        res.download(file.pdf,file.pdfname);
     } catch (error) {
         console.error(error.message);
-        res.status(500).json({ msg: error.message });
+        res.status(404).json({ msg: error.message });
     }
 }
 
@@ -54,18 +54,15 @@ const LoginUser = async (req, res) => {
         }
         else {
 
-            return res.status(404).json("Invalid password")
+            return res.status(404).json({"password":false})
         }
 
     }
     else {
-        return res.status(404).json("User not exist")
+        return res.status(404).json({"user":false})
     }
 
 }
-
-
-
 
 
 
@@ -246,7 +243,7 @@ const AddBookReview = async (req, res) => {
 
 
 const AddBook = async (req, res) => {
-    console.log(273,req)
+    console.log(273,req.files["pdf"][0].originalname)
 
     const book = new Book({
         isbn: req.body.isbn,
@@ -254,7 +251,7 @@ const AddBook = async (req, res) => {
         title: req.body.title,
         image:req.files["image"][0].path,
         pdf:req.files["pdf"][0].path,
-        pdf_name:req.files["pdf"][0].name
+        pdfname:req.files["pdf"][0].originalname
     });
 
     try {

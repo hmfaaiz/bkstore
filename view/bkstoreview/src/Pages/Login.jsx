@@ -3,6 +3,8 @@ import styled from 'styled-components'
 import { Link } from "react-router-dom";
 import Cookies from "universal-cookie";
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { LoginUser,LogoutUser } from "../features/LoginSlice"
 
 
 const Body = styled.body`
@@ -115,65 +117,85 @@ const Login = () => {
   const [user, setUser] = useState('');
   const cookies = new Cookies();
   const naviagte = useNavigate('');
+  const dispatch = useDispatch()
 
 
 
 
-  const Signin = (e) => {
+  // const Signin = (e) => {
+  //   e.preventDefault()
+
+
+
+  //   const obj = {
+  //     username: myusername,
+  //     password: mypassword
+  //   }
+
+
+
+  //   if (obj.username && obj.password) {
+  //     fetch("http://localhost:2000/api/user/login", {
+  //       method: "POST",
+  //       body: JSON.stringify(obj),
+  //       headers: {
+  //         'Content-Type': 'application/json',
+
+  //       },
+  //     })
+  //       .then((data) => data.json())
+  //       .then((res) => {
+
+  //         if (res === null) {
+  //           alert("User not found")
+  //         }
+  //         else if (res === false) {
+  //           alert("Wrong Password")
+  //         }
+  //         else {
+  //           alert("Welcome Back")
+  //           setUser(res)
+  //           cookies.set("token", res)
+  //           localStorage.setItem("login", true)
+  //           naviagte('/home')
+
+  //         }
+
+
+  //       })
+  //       .catch(() => {
+  //         alert("Try again")
+  //       })
+
+
+  //   }
+  //   else {
+  //     alert("Fill all Data")
+  //   }
+
+
+
+  // }
+
+  const CheckSignin = (e) => {
     e.preventDefault()
-
-
-
     const obj = {
       username: myusername,
       password: mypassword
     }
+    const res = dispatch(LoginUser(obj))
+    
 
-
-
-    if (obj.username && obj.password) {
-      fetch("http://localhost:2000/api/user/login", {
-        method: "POST",
-        body: JSON.stringify(obj),
-        headers: {
-          'Content-Type': 'application/json',
-
-        },
-      })
-        .then((data) => data.json())
-        .then((res) => {
-
-          if (res === null) {
-            alert("User not found")
-          }
-          else if (res === false) {
-            alert("Wrong Password")
-          }
-          else {
-            alert("Welcome Back")
-            setUser(res)
-            cookies.set("token", res)
-            localStorage.setItem("login", true)
-            naviagte('/home')
-
-          }
-
-
-        })
-        .catch(() => {
-          alert("Try again")
-        })
-
-
+    if (localStorage.getItem("login")) {
+      naviagte('/home')
     }
-    else {
-      alert("Fill all Data")
+    else{
+      naviagte('/')
     }
 
 
 
   }
-
 
   return (
     <Body>
@@ -199,8 +221,11 @@ const Login = () => {
 
 
           <ButtonContainer>
-            <Button onClick={Signin}>Login</Button>
+            <Button onClick={CheckSignin}>Login</Button>
           </ButtonContainer>
+          {/* <ButtonContainer>
+            <Button onClick={Signin}>Login</Button>
+          </ButtonContainer> */}
 
           <ButtonContainer>
             <Button>

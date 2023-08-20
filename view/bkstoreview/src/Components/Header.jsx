@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
+import {LogoutUser } from "../features/LoginSlice"
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 const StyledHeader = styled.header`
   background-color: #333;
@@ -38,6 +41,22 @@ const TextInput = styled.input`
 
 const Header = (props) => {
   const [userSearch, setUserSearch] = useState([]);
+  const naviagte = useNavigate('');
+  const dispatch = useDispatch()
+
+  const Logout=()=>{
+   
+  
+    dispatch(LogoutUser())
+    console.log("logout click",localStorage.getItem("login"))
+    if (localStorage.getItem("login")) {
+      naviagte('/home')
+    }
+    else{
+      naviagte('/')
+    }
+
+  }
 
   
 
@@ -47,6 +66,7 @@ const Header = (props) => {
         <h1>Faaiz Book Store</h1>
         <TextInput onChange={(e)=>setUserSearch(e.target.value)} placeholder="Search Author, Title, Isbn" />
         <Button onClick={()=>props.search(userSearch)} >Search</Button>
+        <Button onClick={Logout} >Logout</Button>
       
       </StyledHeader>
     </div>

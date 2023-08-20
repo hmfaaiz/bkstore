@@ -35,6 +35,7 @@ const FormContainer = styled.div`
   padding: 25px 30px;
   border-radius: 5px;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+
 `;
 
 const Title = styled.div`
@@ -86,6 +87,8 @@ const FormButton = styled.button`
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  width:100%;
+  margin-top:20px;
 `;
 
 const FileUploadContainer = styled.div`
@@ -108,8 +111,8 @@ const ImageInput = styled.input`
 
 
 const ImagePreview = styled.img`
-  max-width: 100%;
-  height: auto;
+  max-width:100%;
+  height: 20vh;
   margin-top: 10px;
 `;
 
@@ -123,11 +126,27 @@ const Addbook = ({ onAddBook }) => {
 
   const handleImageChange = (e) => {
     const selectedImage = e.target.files[0];
-    setImage(selectedImage);
+    
+    if((selectedImage.size)>2*1024*1024){ //1MB in bytes,10*1024*1024*8 in bits
+      alert("Size should be less than 2Mb")
+    }
+    else{
+      console.log("Size is ok")
+      setImage(selectedImage);
+    }
   };
   const handlePdfChange = (e) => {
     const selectedPdf = e.target.files[0];
-    setPdf(selectedPdf);
+   
+    if((selectedPdf.size)>10*1024*1024){ //10MB in bytes,10*1024*1024*8 in bits
+      alert("Size should be less 10 MB")
+    }
+    else{
+      console.log("Size is ok")
+      setPdf(selectedPdf);
+    }
+   
+    
   };
 
 
@@ -140,26 +159,31 @@ const Addbook = ({ onAddBook }) => {
 
 
   const Submit = (e) => {
-    console.log(newBook.isbn)
+    console.log(pdf,image,(pdf & image))
     e.preventDefault();
-    axios('http://localhost:2000/api/book', {
-      method: "POST",
-      data: newBook,
-      headers: {
-        // "Content-Type": "application/json",
-        "Content-Type": "multipart/form-data",
-        // "Authorization":Cookies.get('token')
-      }
-
-    })
-      .then((res) => {
-        console.log(res)
-        alert("SuccessfullyBok is added")
+    if(pdf!=null & image!=null){
+      axios('http://localhost:2000/api/book', {
+        method: "POST",
+        data: newBook,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        }
+  
       })
+        .then((res) => {
+          console.log(res)
+          alert("Successfully Book is added")
+        })
+  
+        .catch((err) => {
+          alert(err)
+        })
 
-      .catch((err) => {
-        alert(err)
-      })
+    }
+    else{
+      alert("Data is incompleted")
+    }
+   
   }
 
 
@@ -217,28 +241,17 @@ const Addbook = ({ onAddBook }) => {
           </InputBox>
           <ImageUploadLabel>
             Upload Image
-            <ImageInput
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-            />
+            <ImageInput type="file" accept="image/*" onChange={handleImageChange} required/>
+             <FileUploadContainer> {image && <ImagePreview src={URL.createObjectURL(image)} alt="Preview" />} </FileUploadContainer>
           </ImageUploadLabel>
-          <ImageUploadLabel>
-            Upload book (in pdf)
-            <ImageInput
-              type="file"
-              accept=".pdf"
-              onChange={handlePdfChange}
-            />
+         
+          <ImageUploadLabel> Upload book (in pdf)
+            <ImageInput type="file" accept=".pdf" onChange={handlePdfChange} required />
+            <FileUploadContainer> {pdf && <ImagePreview src="https://banner2.cleanpng.com/20180810/or/kisspng-adobe-acrobat-pdf-computer-icons-adobe-reader-edu-6-216-series-compact-arm-pole-mount-5b6d74e0255a30.422316211533900000153.jpg" alt="Preview" />} </FileUploadContainer>
           </ImageUploadLabel>
-          <FileUploadContainer>
-            {image && <ImagePreview src={URL.createObjectURL(image)} alt="Preview" />}
-          </FileUploadContainer>
           <FormButton type="submit">Add Book</FormButton>
-
-
         </form>
-
+       
       </FormContainer>
 
     </Body>
