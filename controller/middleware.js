@@ -70,6 +70,7 @@ const GetBook = async (req, res) => {
 
     Authentication(req, res, async () => {
         const findBook = await Book.find()
+        console.log("Books",findBook)
         return res.status(200).json(findBook)
     })
 }

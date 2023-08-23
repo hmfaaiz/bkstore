@@ -1,9 +1,11 @@
-import React, { useEffect, useState,forwardRef,useImperativeHandle } from 'react';
+import React, { useEffect, useState, forwardRef, useImperativeHandle } from 'react';
 import styled from 'styled-components';
 import Card from "../Components/Card.jsx";
 import axios from 'axios';
 import Cookies from "universal-cookie";
-
+import { useDispatch, useSelector } from 'react-redux';
+import { GetBooksData } from "../features/BookSlice"
+// import { GetBooksApi } from "../Utils/api"
 
 const Container = styled.div`
   display: flex;
@@ -15,75 +17,85 @@ const Container = styled.div`
 
 
 
-const Cards = (props,ref) => {
-  const cookies = new Cookies();
-  const [data, setData] = useState([])
-  
-  const SearchData = (userSearch) => {
+const Cards = (props, ref) => {
+  // const cookies = new Cookies();
+  // const [data, setData] = useState([])
+  const State = useSelector((state) => state.Book.dataBooks)
+  const dispatch = useDispatch()
+  // console.log("setBook")
 
-    axios(`http://localhost:2000/api/book/search/${userSearch}`, {
-      method: 'GET',
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": cookies.get("token"),
+  // const SearchData = (userSearch) => {
 
-      },
-    })
+  //   axios(`http://localhost:2000/api/book/search/${userSearch}`, {
+  //     method: 'GET',
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       "Authorization": cookies.get("token"),
 
-      .then((res) => {
-        const bookArray = Array.isArray(res.data) ? res.data : [res.data];
+  //     },
+  //   })
 
-        setData(bookArray)
-       
-      })
+  //     .then((res) => {
+  //       const bookArray = Array.isArray(res.data) ? res.data : [res.data];
 
-      .catch((err) => {
-        alert(err)
-      })
+  //       setData(bookArray)
 
-  }
+  //     })
+
+  //     .catch((err) => {
+  //       alert(err)
+  //     })
+
+  // }
 
 
-   useImperativeHandle(ref, () => ({
-        searchData: SearchData
-    }));
+  // useImperativeHandle(ref, () => ({
+  //   searchData: SearchData
+  // }));
 
-  const GetData = () => {
-    axios("http://localhost:2000/api/book", {
-      method: 'GET',
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": cookies.get("token"),
+  // const GetData = () => {
 
-      },
-    })
+  //   axios('http://localhost:2000/api/book', {
+  //     method: 'GET',
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       "Authorization": cookies.get("token"),
 
-      .then((res) => {
-        const bookArray = Array.isArray(res.data) ? res.data : [res.data];
+  //     },
+  //   })
 
-        setData(bookArray)
-       
-      })
+  //     .then((res) => {
+  //       const bookArray = Array.isArray(res.data) ? res.data : [res.data];
+  //       console.log("Callme",bookArray)
+  //       setData(bookArray)
+  //     })
 
-      .catch((err) => {
-        alert(err)
-      })
+  //     .catch((err) => {
 
-  }
+  //       alert(err)
+  //     })
+
+  // }
 
 
 
   useEffect(() => {
-    GetData()
+    // GetData()
+    dispatch(GetBooksData())
+    console.log("State1", State)
 
   }, [])
+ 
+  
+
 
   return (
     <div>
-      {data?
+
+      {State?
         (
-          data.map((item,i) => (
-            <Card data={item} key={i}/>
+          State.map((item, i) => (
+            <Card data={item} key={i} />
           ))) :
         (<p>Please wait</p>)
       }

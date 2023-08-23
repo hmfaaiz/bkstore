@@ -1,17 +1,12 @@
-import { useState } from 'react'
+
 import { createSlice } from '@reduxjs/toolkit';
 import Cookies from "universal-cookie";
-import { useNavigate } from 'react-router-dom';
 
 
 
-// const [user, setUser] = useState('');
+
 const cookies = new Cookies();
-// const naviagte = useNavigate('');
-
-const initialState = {
-
-}
+const initialState = {}
 
 
 
@@ -70,7 +65,7 @@ const LoginSlice = createSlice({
         LoginUser: (state, action) => {
             Signin(action.payload)
         },
-        LogoutUser: () => {Signout()}
+        LogoutUser: () => { Signout() }
     }
 })
 
