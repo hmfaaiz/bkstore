@@ -107,33 +107,33 @@ const Search = async (req, res) => {
 
 }
 
-const GetBookByIsbn = async (req, res) => {
-    Authentication(req, res, async (user) => {
-        const isbn = req.params.isbn
-        const findBook = await Book.findOne({ "isbn": isbn })
-        return res.status(200).json(findBook)
+// const GetBookByIsbn = async (req, res) => {
+//     Authentication(req, res, async (user) => {
+//         const isbn = req.params.isbn
+//         const findBook = await Book.findOne({ "isbn": isbn })
+//         return res.status(200).json(findBook)
 
-    })
+//     })
 
-}
+// }
 
-const GetBookByAuthor = async (req, res) => {
+// const GetBookByAuthor = async (req, res) => {
 
-    Authentication(req, res, async () => {
-        const author = req.params.authorname
-        const findBook = await Book.find({ "author": author })
-        return res.status(200).json(findBook)
-    })
-}
+//     Authentication(req, res, async () => {
+//         const author = req.params.authorname
+//         const findBook = await Book.find({ "author": author })
+//         return res.status(200).json(findBook)
+//     })
+// }
 
-const GetBookByTitle = async (req, res) => {
+// const GetBookByTitle = async (req, res) => {
 
-    Authentication(req, res, async () => {
-        const title = req.params.title
-        const findBook = await Book.find({ "title": title })
-        return res.status(200).json(findBook)
-    })
-}
+//     Authentication(req, res, async () => {
+//         const title = req.params.title
+//         const findBook = await Book.find({ "title": title })
+//         return res.status(200).json(findBook)
+//     })
+// }
 
 const GetBookByReview = async (req, res) => {
 
@@ -266,6 +266,6 @@ const AddBook = async (req, res) => {
 }
 
 module.exports = {
-    AddBook, GetBook, GetBookByIsbn, GetBookByAuthor, GetBookByTitle, GetBookByReview,
+    AddBook, GetBook, GetBookByReview,
     RegisterUser, LoginUser, AddBookReview, ModifyReview, DeleteReview, Search,GetImage
 }

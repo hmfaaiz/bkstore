@@ -23,20 +23,20 @@ route.get("/search/:key", (req, res) => {
 
 })
 
-route.get("/isbn/:isbn", (req, res) => {
-    GetBookByIsbn(req, res)
+// route.get("/isbn/:isbn", (req, res) => {
+//     GetBookByIsbn(req, res)
 
-})
+// })
 
-route.get("/author/:authorname", (req, res) => {
-    GetBookByAuthor(req, res)
+// route.get("/author/:authorname", (req, res) => {
+//     GetBookByAuthor(req, res)
 
-})
+// })
 
-route.get("/title/:title", (req, res) => {
-    GetBookByTitle(req, res)
+// route.get("/title/:title", (req, res) => {
+//     GetBookByTitle(req, res)
 
-})
+// })
 
 route.get("/review/:isbn", (req, res) => {
     GetBookByReview(req, res)

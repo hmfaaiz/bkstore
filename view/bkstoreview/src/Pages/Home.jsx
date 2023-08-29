@@ -7,19 +7,23 @@ import Cards from "../Components/Cards.jsx";
 
 
 const Home = () => {
-    const searchRef=useRef(null)
-    const search=(userSearch)=>{
-        searchRef.current.searchData(userSearch)
-    }
+    // const searchRef=useRef(null)
+    // const search=(userSearch)=>{
+    //     searchRef.current.searchData(userSearch)
+
+    // }
+
 
 
 
     return (
         <>
     
-            <Header search={search} />
+            <Header/>
+            {/* <Header search={search} /> */}
           
-            <Cards ref={searchRef}/>
+            <Cards/>
+            {/* <Cards ref={searchRef}/> */}
 
         </>
     );
