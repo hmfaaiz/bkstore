@@ -7,7 +7,7 @@ const { GenerateToken, Authentication } = require('./authentication')
 const GetImage = async (req, res) => {
     try {   
         const file = await Book.findById(req.params.fileId);
-        console.log(file)
+      
         res.download(file.pdf,file.pdfname);
     } catch (error) {
         console.error(error.message);
@@ -70,7 +70,7 @@ const GetBook = async (req, res) => {
 
     Authentication(req, res, async () => {
         const findBook = await Book.find()
-        console.log("Books",findBook)
+        
         return res.status(200).json(findBook)
     })
 }
@@ -155,12 +155,12 @@ const ModifyReview = (req, res) => {
         const modifyReview = req.body.reviews
         const username = user.user.username
         let find = selectBook.reviews.findIndex(obj => obj.id === req.params.rid)
-        console.log(find)
+     
         if (find >= 0) {
             try {
                 if (selectBook.reviews[find].username == username) {
                     selectBook.reviews[find].review = modifyReview
-                    console.log(selectBook)
+                 
                     selectBook.markModified('reviews');
                     const saveBook = await selectBook.save()
 
@@ -194,12 +194,12 @@ const DeleteReview = (req, res) => {
 
         const username = user.user.username
         let find = selectBook.reviews.findIndex(obj => obj.id === req.params.rid)
-        console.log(find)
+    
         if (find >= 0) {
             try {
                 if (selectBook.reviews[find].username == username) {
                     selectBook.reviews.splice(find, 1)
-                    console.log(selectBook)
+                 
                     selectBook.markModified('reviews');
                     const saveBook = await selectBook.save()
 
@@ -231,6 +231,7 @@ const AddBookReview = async (req, res) => {
 
         const selectBook = await Book.findOne({ "isbn": req.params.isbn })
         const review = req.body.reviews
+        console.log(req.body)
         selectBook.reviews.push({
             id: uuidv4(), username: user.user.username,
             review: review
@@ -244,7 +245,7 @@ const AddBookReview = async (req, res) => {
 
 
 const AddBook = async (req, res) => {
-    console.log(273,req.files["pdf"][0].originalname)
+    
 
     const book = new Book({
         isbn: req.body.isbn,

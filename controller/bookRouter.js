@@ -7,7 +7,7 @@ const upload = multer({ dest: 'uploads/' })
 const route = require("express").Router()
 
 route.post("/", upload.fields([{ name: "image", maxCount: 1 }, { name: "pdf", maxCount: 1 }]), (req, res) => {
-    console.log("Click")
+  
     AddBook(req, res)
 
 })
@@ -18,7 +18,7 @@ route.get("/", (req, res) => {
 })
 
 route.get("/search/:key", (req, res) => {
-    console.log(typeof (req.params.key))
+   
     Search(req, res)
 
 })
@@ -43,6 +43,7 @@ route.get("/review/:isbn", (req, res) => {
 
 })
 route.post("/addreview/:isbn", (req, res) => {
+    console.log("add review backend")
     AddBookReview(req, res)
 
 })
@@ -58,7 +59,7 @@ route.delete("/deletereview/:isbn/:rid", (req, res) => {
 })
 
 route.get("/pdf/:fileId",(req,res)=>{
-    console.log("ddd")
+
     GetImage(req,res)
    
 

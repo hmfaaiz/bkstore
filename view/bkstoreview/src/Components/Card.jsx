@@ -8,6 +8,8 @@ import { Dialog, Box, styled as mtstyled } from "@mui/material"
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import Button from '@mui/material/Button';
+import { useDispatch, useSelector } from 'react-redux';
+import { AddReviewData } from "../features/CommentSlice"
 
 const Container = styled.div`
   display: flex;
@@ -197,7 +199,9 @@ const DialogueStyle = {
 }
 
 const Cart = (props) => {
-  console.log(props.data._id)
+  // const State = useSelector((state) => state.Review.dataReview)
+  const dispatch = useDispatch()
+  // console.log(props.data._id)
   const reviews = props.data.reviews
   const [myreview, setMyreview] = useState("")
 
@@ -212,10 +216,18 @@ const Cart = (props) => {
     setPointerSee(i)
   };
 
+  const Slice = () => {
+   
+    const obj = {
+      reviews: myreview
+    }
+    console.log("slice",obj)
+    dispatch(AddReviewData({isbn:`${props.data.isbn}`, obj: {reviews: myreview}}))
+  }
 
 
   const AddReview = () => {
-    console.log("myreview")
+   
     const obj = {
       reviews: myreview
     }
@@ -407,7 +419,7 @@ const Cart = (props) => {
         <InputContainer>
           <TextInput onChange={(e) => setMyreview(e.target.value)} placeholder="Add your comment here..." />
           {myreview != "" ? (
-            <SendButton onClick={AddReview}>&gt; </SendButton>
+            <SendButton onClick={()=>Slice()}>&gt; </SendButton>
 
           ) : (
             <p></p>
